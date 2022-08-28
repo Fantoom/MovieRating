@@ -1,0 +1,38 @@
+﻿@using MovieRating.Data.Models
+@model MovieWithRatingAndActors
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>@Model.Movie.Title</h1>
+
+<h3>@Model.Movie.Description</h3>
+<h3>Release date: @Model.Movie.ReleaseDate.ToShortDateString()</h3>
+
+<h5>Actors</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Actor name
+            </th>
+            <th>
+                Rating
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Actors) 
+{
+        <tr>
+            <td>
+                @Html.ActionLink(item.Actor.Name, "Actor", "Actor", new {actorId = item.Actor.Id})
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AverageRating)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

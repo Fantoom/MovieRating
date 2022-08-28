@@ -1,0 +1,69 @@
+﻿@using MovieRating.Data.Models
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+
+@model IEnumerable<ActorWithRating>
+@{int page = (Model as IPagedList)?.PageNumber ?? 0;}
+
+@{
+    ViewData["Title"] = "Actors";
+}
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h1>Actors</h1>
+
+<p>
+    <a asp-action="TopActors">Top Actors</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Actor.Name)
+            </th>
+            <th>
+                Rating
+            </th>
+            <th>
+                 Your rating
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) 
+{
+        <tr>
+            <td>
+                @Html.ActionLink(item.Actor.Name, "Actor", new {actorId = item.Actor.Id})
+            </td>
+            <td>
+                @(item.AverageRating?.ToString("0.##") ?? "Rating is not available yet")
+            </td>
+            <td>
+                @if (User.Identity?.IsAuthenticated is true)
+                {
+                        @using (Html.BeginForm("SetActorRating", "Actor", new { actorId = item.Actor.Id, @page }, FormMethod.Post))
+                        {
+                            <fieldset>@Html.DropDownList(
+                            "rating",
+                            Enumerable.Range(0, 11)
+                                       .Select(x => new SelectListItem() 
+                                       { 
+                                            Text = x.ToString(),
+                                            Value = x.ToString(), 
+                                            Selected = x == item.UserRating?.Rating
+                                       }))
+                            <p>
+                                <input type="submit" value="Submit" />
+                            </p>
+                        </fieldset>
+                    }
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@if(Model is IPagedList pagedList)
+@Html.PagedListPager(pagedList, page => Url.Action("Index", new { page }))

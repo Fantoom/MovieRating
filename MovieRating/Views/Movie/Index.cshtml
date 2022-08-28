@@ -1,0 +1,82 @@
+﻿@using MovieRating.Data.Models
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+
+@model IEnumerable<MovieWithRating>
+@{int page = (Model as IPagedList)?.PageNumber ?? 0;}
+
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h1>Movies</h1>
+
+<p>
+    <a asp-action="TopMovies">Top Movies</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie.ReleaseDate)
+            </th>
+            <th>
+                Rating
+            </th>
+            <th>
+                 Your rating
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) 
+{
+        <tr>
+            <td>
+                @Html.ActionLink(item.Movie.Title, "Movie", new {movieId = item.Movie.Id})
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Movie.Description)
+            </td>
+            <td>
+                @item.Movie.ReleaseDate.ToShortDateString()
+            </td>
+            <td>
+                @(item.AverageRating?.ToString("0.##") ?? "Rating is not available yet")
+            </td>
+            <td>
+                @if (User.Identity?.IsAuthenticated is true)
+                {
+                        @using (Html.BeginForm("SetMovieRating", "Movie", new { movieId = item.Movie.Id, @page }, FormMethod.Post))
+                        {
+                            <fieldset>@Html.DropDownList(
+                            "rating",
+                            Enumerable.Range(0, 11)
+                                       .Select(x => new SelectListItem() 
+                                       { 
+                                            Text = x.ToString(),
+                                            Value = x.ToString(), 
+                                            Selected = x == item.UserRating?.Rating
+                                       }))
+                            <p>
+                                <input type="submit" value="Submit" />
+                            </p>
+                        </fieldset>
+                    }
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@if(Model is IPagedList pagedList)
+@Html.PagedListPager(pagedList, page => Url.Action("Index", new { page }))
