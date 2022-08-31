@@ -1,5 +1,4 @@
-﻿using Mapster;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MovieRating.Data;
 using MovieRating.Data.Models;
 using MovieRating.Data.Models.Dtos;
