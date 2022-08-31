@@ -12,10 +12,6 @@ namespace MovieRating.Services
         {
             _dbContext = dbContext;
         }
-        public async Task<List<Movie>> GetAllMoviesAsync()
-        {
-            return await _dbContext.Movies.ToListAsync();
-        }
 
         public async Task<AsyncPagedList<MovieWithRatingDto>> GetPagedMoviesWithRatingsAsync(int pageNumber, int pageSize, string? userId = null)
         {
