@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using MovieRating.Data;
 using MovieRating.Data.Models;
+using MovieRating.Data.Models.Dtos;
 
 namespace MovieRating.Services
 {
@@ -16,9 +18,10 @@ namespace MovieRating.Services
             return await _dbContext.Movies.ToListAsync();
         }
 
-        public async Task<AsyncPagedList<MovieWithRating>> GetPagedMoviesWithRatingsAsync(int pageNumber, int pageSize, string? userId = null)
+        public async Task<AsyncPagedList<MovieWithRatingDto>> GetPagedMoviesWithRatingsAsync(int pageNumber, int pageSize, string? userId = null)
         {
-            return await SelectAllMoviesWithRatings(userId).ToAsyncPagedList(pageNumber, pageSize);
+            return await SelectAllMoviesWithRatings(userId)
+                         .ToAsyncPagedList(pageNumber, pageSize);
         }
 
         public async Task AddRatingAsync(string userId, int movieId, int rating)
@@ -36,59 +39,59 @@ namespace MovieRating.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<MovieWithRating>> GetTopMoviesAsync(int count, string? userId = null)
+        public async Task<List<MovieWithRatingDto>> GetTopMoviesAsync(int count, string? userId = null)
         {
-            return await SelectAllMoviesWithRatings(userId).OrderByDescending(x => x.AverageRating).Take(count).ToListAsync();
+            return await SelectAllMoviesWithRatings(userId)
+                .OrderByDescending(x => x.AverageRating)
+                .Take(count)
+                .ToListAsync();
         }
 
         public async Task<MovieRatingModel?> GetUserMovieRatingAsync(string userId, int movieId)
         {
-            return await _dbContext.MovieRatings.FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
+            return await _dbContext
+                .MovieRatings
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
         }
 
-        public async Task<MovieWithRatingAndActors> GetMovieWithRatingAndActorsAsync(int movieId, string? userId = null)
+        public async Task<MovieWithRatingAndActorsDto> GetMovieWithRatingAndActorsAsync(int movieId, string? userId = null)
         {
-            return await SelectAllMoviesWithRatingsAndActors(userId).FirstAsync(x => x.Movie.Id == movieId);
+            return await SelectAllMoviesWithRatingsAndActors(userId).FirstAsync(x => x.Id == movieId);
         }
 
-        private IQueryable<MovieWithRating> SelectAllMoviesWithRatings(string? userId = null, IQueryable<Movie>? movies = null)
+        private IQueryable<MovieWithRatingDto> SelectAllMoviesWithRatings(string? userId = null, IQueryable<Movie>? movies = null)
         {
             return (movies ?? _dbContext.Movies)
-                .Select(x => new MovieWithRating()
+                .Select(x => new MovieWithRatingDto()
                 {
-                    Movie = new MovieDto
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        Description = x.Description,
-                        ReleaseDate = x.ReleaseDate
-                    },
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    ReleaseDate = x.ReleaseDate,
                     AverageRating = x.Ratings.Average(r => r.Rating),
-                    UserRating = MovieRatingDto.MapFrom(x.Ratings.FirstOrDefault(r => r.UserId == userId))
+                    UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating).FirstOrDefault()
                 });
         }
 
-        private IQueryable<MovieWithRatingAndActors> SelectAllMoviesWithRatingsAndActors(string? userId = null, IQueryable<Movie>? movies = null)
+        private IQueryable<MovieWithRatingAndActorsDto> SelectAllMoviesWithRatingsAndActors(string? userId = null, IQueryable<Movie>? movies = null)
         {
             return (movies ?? _dbContext.Movies)
-               .Select(x => new MovieWithRatingAndActors()
-               {
-                   Movie = new MovieDto
-                   {
-                       Id = x.Id,
-                       Title = x.Title,
-                       Description = x.Description,
-                       ReleaseDate = x.ReleaseDate
-                   },
-                   AverageRating = x.Ratings.Average(r => r.Rating),
-                   UserRating = MovieRatingDto.MapFrom(x.Ratings.FirstOrDefault(r => r.UserId == userId)),
-                   Actors = x.Actors.Select(a => new ActorWithRating()
-                   {
-                       Actor = ActorDto.MapFrom(a),
-                       AverageRating = a.Ratings.Average(r => r.Rating),
-                       UserRating = a.Ratings.Select(r => new ActorRatingDto { UserId = r.UserId, ActorId = r.ActorId, Rating = r.Rating}).FirstOrDefault(r => r.UserId == userId)
-                   }).ToList()
-               });
+                .Select(x => new MovieWithRatingAndActorsDto()
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    ReleaseDate = x.ReleaseDate,
+                    AverageRating = x.Ratings.Average(r => r.Rating),
+                    UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating).FirstOrDefault(),
+                    Actors = x.Actors.Select(a => new ActorWithRatingDto()
+                    {
+                        Id = a.Id,
+                        Name = a.Name,
+                        AverageRating = a.Ratings.Average(r => r.Rating),
+                        UserRating = a.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating).FirstOrDefault()
+                    }).ToList()
+                });
         }
     }
 }
