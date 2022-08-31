@@ -9,7 +9,7 @@ namespace MovieRating.Services
         Task<List<Movie>> GetAllMoviesAsync();
         Task<MovieWithRatingAndActors> GetMovieWithRatingAndActorsAsync(int movieId, string? userId = null);
         Task<AsyncPagedList<MovieWithRating>> GetPagedMoviesWithRatingsAsync(int pageNumber, int pageSize, string? userId = null);
-        Task<List<MovieWithRating>> GetTopMoviesAsync(int count);
+        Task<List<MovieWithRating>> GetTopMoviesAsync(int count, string? userId = null);
         Task<MovieRatingModel?> GetUserMovieRatingAsync(string userId, int movieId);
     }
 }

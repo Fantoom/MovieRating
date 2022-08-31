@@ -17,25 +17,35 @@ namespace MovieRating.Services
             return (actors ?? _dbContext.Actors)
                .Select(x => new ActorWithRating()
                {
-                   Actor = x,
+                   Actor = ActorDto.MapFrom(x),
                    AverageRating = x.Ratings.Average(r => r.Rating),
-                   UserRating = _dbContext.ActorRatings.FirstOrDefault(r => r.UserId == userId)
+                   UserRating = ActorRatingDto.MapFrom(x.Ratings.FirstOrDefault(r => r.UserId == userId))
                });
         }
 
         private IQueryable<ActorWithRatingAndMovies> SelectAllActorsWithRatingsAndMovies(string? userId = null, IQueryable<Actor>? actors = null)
         {
             return (actors ?? _dbContext.Actors)
-               .Select(x => new ActorWithRatingAndMovies()
+               .Select(actor => new ActorWithRatingAndMovies()
                {
-                   Actor = x,
-                   AverageRating = x.Ratings.Average(r => r.Rating),
-                   UserRating = _dbContext.ActorRatings.FirstOrDefault(r => r.UserId == userId),
-                   Movies = _dbContext.Movies.Select(a => new MovieWithRating()
+                   Actor = new ActorDto
                    {
-                       Movie = a,
-                       AverageRating = a.Ratings.Average(r => r.Rating),
-                       UserRating = _dbContext.MovieRatings.FirstOrDefault(r => r.UserId == userId)
+                       Id = actor.Id,
+                       Name = actor.Name
+                   },
+                   AverageRating = actor.Ratings.Average(r => r.Rating),
+                   UserRating = ActorRatingDto.MapFrom(actor.Ratings.FirstOrDefault(r => r.UserId == userId)),
+                   Movies = actor.Movies.Select(movie => new MovieWithRating()
+                   {
+                       Movie = new MovieDto
+                       {
+                           Id = movie.Id,
+                           Title = movie.Title,
+                           Description = movie.Description,
+                           ReleaseDate = movie.ReleaseDate
+                       },
+                       AverageRating = movie.Ratings.Average(r => r.Rating),
+                       UserRating = MovieRatingDto.MapFrom(movie.Ratings.FirstOrDefault(r => r.UserId == userId))
                    }).ToList()
                }); ;
         }
