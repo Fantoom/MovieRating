@@ -4,6 +4,7 @@ using MovieRating.Services;
 using X.PagedList;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using MovieRating.Data.Models.Dtos;
 
 namespace MovieRating.Test
 {
@@ -79,14 +80,11 @@ namespace MovieRating.Test
 
         public async Task GetTopMoviesAsyncTest(int count, string? userId = null)
         {
-            var serviceMovies = await movieService.GetTopMoviesAsync(count, userId);
+            var serviceMovies = await movieService.GetTopMoviesAsync(count, userId) as IEnumerable<MovieWithRatingDto>;
             var expectedMovies = generatedMovies.SelectAllMoviesWithRatings(userId)
                                             .OrderByDescending(x => x.AverageRating)
                                             .Take(count);
-            //var expected = JsonSerializer.Serialize(expectedMovies, new JsonSerializerOptions() { MaxDepth = 5, ReferenceHandler = ReferenceHandler.IgnoreCycles });;
-            //var got = JsonSerializer.Serialize(serviceMovies, new JsonSerializerOptions() { MaxDepth = 5, ReferenceHandler = ReferenceHandler.IgnoreCycles });
-
-            Assert.Equal(serviceMovies, expectedMovies);
+            Assert.Equal(expectedMovies, serviceMovies);
         }
 
         [Theory]
@@ -96,20 +94,20 @@ namespace MovieRating.Test
         {
             var serviceMovie = await movieService.GetMovieWithRatingAndActorsAsync(movieId, userId);
             var expectedMovie = generatedMovies.SelectAllMoviesWithRatingsAndActors(userId)
-                                           .First(x => x.Movie.Id == movieId);
+                                           .First(x => x.Id == movieId);
 
-            Assert.Equal(serviceMovie.UserRating, expectedMovie.UserRating);
+            Assert.Equal(expectedMovie.UserRating, serviceMovie.UserRating);
         }
 
         [Theory]
         [InlineData("TestUserId", 1)]
         public async Task GetUserMovieRatingAsyncTest(string userId, int movieId)
         {
-            var movieRating = await movieService.GetUserMovieRatingAsync(userId, movieId);
-            var testRating = generatedMovies.First(x => x.Id == movieId).Ratings
+            var serviceMovieRating = await movieService.GetUserMovieRatingAsync(userId, movieId);
+            var expectedRating = generatedMovies.First(x => x.Id == movieId).Ratings
                                             .First(x => x.UserId == userId);
 
-            Assert.Equal(movieRating, testRating);
+            Assert.Equal(expectedRating, serviceMovieRating);
         }
 
         [Theory]
@@ -117,8 +115,8 @@ namespace MovieRating.Test
         [InlineData(2, 5, "TestUserId")]
         public async Task GetPagedMoviesWithRatingsAsyncTest(int page, int pageSize, string userId)
         {
-            var movies = await movieService.GetPagedMoviesWithRatingsAsync(page, pageSize, userId) as IEnumerable<MovieWithRating>;
-            var testMovies = generatedMovies.SelectAllMoviesWithRatings(userId).ToPagedList(page, pageSize) as IEnumerable<MovieWithRating>;
+            var movies = await movieService.GetPagedMoviesWithRatingsAsync(page, pageSize, userId) as IEnumerable<MovieWithRatingDto>;
+            var testMovies = generatedMovies.SelectAllMoviesWithRatings(userId).ToPagedList(page, pageSize) as IEnumerable<MovieWithRatingDto>;
 
             Assert.Equal(movies, testMovies);
         }
@@ -127,27 +125,34 @@ namespace MovieRating.Test
 
     internal static class MovieTestExt
     {
-        internal static IEnumerable<MovieWithRating> SelectAllMoviesWithRatings(this IEnumerable<Movie> movies, string? userId = null)
+        internal static IEnumerable<MovieWithRatingDto> SelectAllMoviesWithRatings(this IEnumerable<Movie> movies, string? userId = null)
         {
-            return movies.Select(x => new MovieWithRating()
+            return movies.Select(x => new MovieWithRatingDto()
             {
-                Movie = MovieDto.MapFrom(x),
+                Id = x.Id,
+                Title = x.Title,
+                Description = x.Description,
+                ReleaseDate = x.ReleaseDate,
                 AverageRating = x.Ratings.Average(r => r.Rating),
-                UserRating = MovieRatingDto.MapFrom(x.Ratings.FirstOrDefault(r => r.UserId == userId))
+                UserRating = x.Ratings.FirstOrDefault(r => r.UserId == userId)?.Rating ?? null
             });
         }
-        internal static IEnumerable<MovieWithRating> SelectAllMoviesWithRatingsAndActors(this IEnumerable<Movie> movies, string? userId = null)
+        internal static IEnumerable<MovieWithRatingDto> SelectAllMoviesWithRatingsAndActors(this IEnumerable<Movie> movies, string? userId = null)
         {
-            return movies.Select(x => new MovieWithRatingAndActors()
+            return movies.Select(x => new MovieWithRatingAndActorsDto()
             {
-                Movie = MovieDto.MapFrom(x),
+                Id = x.Id,
+                Title = x.Title,
+                Description = x.Description,
+                ReleaseDate = x.ReleaseDate,
                 AverageRating = x.Ratings.Average(r => r.Rating),
-                UserRating = MovieRatingDto.MapFrom(x.Ratings.FirstOrDefault(r => r.UserId == userId)),
-                Actors = x.Actors.Select(a => new ActorWithRating()
+                UserRating = x.Ratings.FirstOrDefault(r => r.UserId == userId)?.Rating,
+                Actors = x.Actors.Select(a => new ActorWithRatingDto()
                 {
-                    Actor = ActorDto.MapFrom(a),
+                    Id = a.Id,
+                    Name = a.Name,
                     AverageRating = a.Ratings.Average(r => r.Rating),
-                    UserRating = ActorRatingDto.MapFrom(a.Ratings.FirstOrDefault(r => r.UserId == userId))
+                    UserRating = a.Ratings.FirstOrDefault(r => r.UserId == userId)?.Rating
                 }).ToList()
             });
         }
