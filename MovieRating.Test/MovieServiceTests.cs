@@ -19,8 +19,9 @@ namespace MovieRating.Test
         public MovieServiceTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                              .UseInMemoryDatabase("TestDB")
+                              .UseInMemoryDatabase("MovieTestDB")
                               .Options;
+
             context = new ApplicationDbContext(options);
             context.Database.EnsureDeleted();
 
@@ -28,50 +29,6 @@ namespace MovieRating.Test
             context.Movies.AddRange(generatedMovies);
             context.SaveChanges();
             movieService = new MovieService(context);
-        }
-
-        private List<Movie> GetTestData()
-        {
-            var Actors = Enumerable.Range(1, 10).Select(actorId => new Actor()
-            {
-                Id = actorId,
-                Name = $"Actor{actorId}",
-                Ratings = Enumerable.Range(1, 5).Select(ratingId => new ActorRating
-                {
-                    Id = actorId * 1000 + ratingId,
-                    ActorId = actorId,
-                    Rating = ratingId,
-                    UserId = testUserId
-                }).ToList()
-            }).ToList();
-
-            return Enumerable.Range(1, 10).Select(movieId => new Movie()
-            {
-                Id = movieId,
-                Title = $"Movie{movieId}",
-                Description = $"MovieDescription{movieId}",
-                ReleaseDate = DateTime.Parse("30.08.2022"),
-                Actors = Actors.Take(movieId).ToList(),
-                Ratings = Enumerable.Range(1, 5).Select(ratingId => new MovieRatingModel
-                {
-                    Id = movieId * 1000 + ratingId,
-                    MovieId = movieId,
-                    Rating = ratingId,
-                    UserId = testUserId
-                }).ToList()
-            }).ToList();
-        }
-
-        public void Dispose()
-        {
-            context.Dispose();
-        }
-
-        [Fact]
-        public async Task GetAllMoviesAsyncTest()
-        {
-            var serviceMovies = await movieService.GetAllMoviesAsync();
-            Assert.Equal(serviceMovies, generatedMovies);
         }
 
         [Theory]
@@ -115,10 +72,47 @@ namespace MovieRating.Test
         [InlineData(2, 5, "TestUserId")]
         public async Task GetPagedMoviesWithRatingsAsyncTest(int page, int pageSize, string userId)
         {
-            var movies = await movieService.GetPagedMoviesWithRatingsAsync(page, pageSize, userId) as IEnumerable<MovieWithRatingDto>;
-            var testMovies = generatedMovies.SelectAllMoviesWithRatings(userId).ToPagedList(page, pageSize) as IEnumerable<MovieWithRatingDto>;
+            var serviceMovies = await movieService.GetPagedMoviesWithRatingsAsync(page, pageSize, userId) as IEnumerable<MovieWithRatingDto>;
+            var expectedMovies = generatedMovies.SelectAllMoviesWithRatings(userId).ToPagedList(page, pageSize) as IEnumerable<MovieWithRatingDto>;
 
-            Assert.Equal(movies, testMovies);
+            Assert.Equal(expectedMovies, serviceMovies);
+        }
+
+        private static List<Movie> GetTestData()
+        {
+            var actors = Enumerable.Range(1, 10).Select(actorId => new Actor()
+            {
+                Id = actorId,
+                Name = $"Actor{actorId}",
+                Ratings = Enumerable.Range(1, 5).Select(ratingId => new ActorRating
+                {
+                    Id = actorId * 1000 + ratingId,
+                    ActorId = actorId,
+                    Rating = ratingId,
+                    UserId = testUserId
+                }).ToList()
+            }).ToList();
+
+            return Enumerable.Range(1, 10).Select(movieId => new Movie()
+            {
+                Id = movieId,
+                Title = $"Movie{movieId}",
+                Description = $"MovieDescription{movieId}",
+                ReleaseDate = DateTime.Parse("30.08.2022"),
+                Actors = actors.Take(movieId).ToList(),
+                Ratings = Enumerable.Range(1, 5).Select(ratingId => new MovieRatingModel
+                {
+                    Id = movieId * 1000 + ratingId,
+                    MovieId = movieId,
+                    Rating = ratingId,
+                    UserId = testUserId
+                }).ToList()
+            }).ToList();
+        }
+
+        public void Dispose()
+        {
+            context.Dispose();
         }
 
     }
