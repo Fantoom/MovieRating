@@ -68,7 +68,7 @@ namespace MovieRating.Services
                     Description = x.Description,
                     ReleaseDate = x.ReleaseDate,
                     AverageRating = x.Ratings.Average(r => r.Rating),
-                    UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating).FirstOrDefault()
+                    UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating as int?).FirstOrDefault()
                 });
         }
 
@@ -82,7 +82,7 @@ namespace MovieRating.Services
                     Description = x.Description,
                     ReleaseDate = x.ReleaseDate,
                     AverageRating = x.Ratings.Average(r => r.Rating),
-                    UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating).FirstOrDefault(),
+                    UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating as int?).FirstOrDefault(),
                     Actors = x.Actors.Select(a => new ActorWithRatingDto()
                     {
                         Id = a.Id,
