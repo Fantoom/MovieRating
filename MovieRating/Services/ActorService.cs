@@ -21,7 +21,7 @@ namespace MovieRating.Services
 
         public async Task<List<ActorWithRatingDto>> GetTopActorsAsync(int count, string? userId)
         {
-            return await SelectAllActorsWithRatings()
+            return await SelectAllActorsWithRatings(userId)
                 .OrderByDescending(x => x.AverageRating)
                 .Take(count).ToListAsync();
         }
@@ -62,7 +62,7 @@ namespace MovieRating.Services
                    Id = actor.Id,
                    Name = actor.Name,
                    AverageRating = actor.Ratings.Average(r => r.Rating),
-                   UserRating = actor.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating).FirstOrDefault()
+                   UserRating = actor.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating as int?).FirstOrDefault()
                });
         }
 
