@@ -1,8 +1,9 @@
 ﻿@using MovieRating.Data.Models
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
+@using MovieRating.Data.Models.Dtos;
 
-@model IEnumerable<MovieWithRating>
+@model IEnumerable<MovieWithRatingDto>
 @{int page = (Model as IPagedList)?.PageNumber ?? 0;}
 
 @{
@@ -20,13 +21,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Movie.Title)
+                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Movie.Description)
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Movie.ReleaseDate)
+                @Html.DisplayNameFor(model => model.ReleaseDate)
             </th>
             <th>
                 Rating
@@ -41,13 +42,13 @@
 {
         <tr>
             <td>
-                @Html.ActionLink(item.Movie.Title, "Movie", new {movieId = item.Movie.Id})
+                @Html.ActionLink(item.Title, "Movie", new {movieId = item.Id})
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Movie.Description)
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @item.Movie.ReleaseDate.ToShortDateString()
+                @item.ReleaseDate.ToShortDateString()
             </td>
             <td>
                 @(item.AverageRating?.ToString("0.##") ?? "Rating is not available yet")
@@ -55,7 +56,7 @@
             <td>
                 @if (User.Identity?.IsAuthenticated is true)
                 {
-                        @using (Html.BeginForm("SetMovieRating", "Movie", new { movieId = item.Movie.Id, @page }, FormMethod.Post))
+                        @using (Html.BeginForm("SetMovieRating", "Movie", new { movieId = item.Id, @page }, FormMethod.Post))
                         {
                             <fieldset>@Html.DropDownList(
                             "rating",
@@ -64,7 +65,7 @@
                                        { 
                                             Text = x.ToString(),
                                             Value = x.ToString(), 
-                                            Selected = x == item.UserRating?.Rating
+                                            Selected = x == item?.UserRating
                                        }))
                             <p>
                                 <input type="submit" value="Submit" />

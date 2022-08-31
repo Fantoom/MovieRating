@@ -1,14 +1,15 @@
-﻿@using MovieRating.Data.Models
-@model MovieWithRatingAndActors
+﻿@using MovieRating.Data.Models;
+@using MovieRating.Data.Models.Dtos
+@model MovieWithRatingAndActorsDto
 
 @{
     ViewData["Title"] = "View";
 }
 
-<h1>@Model.Movie.Title</h1>
+<h1>@Model.Title</h1>
 
-<h3>@Model.Movie.Description</h3>
-<h3>Release date: @Model.Movie.ReleaseDate.ToShortDateString()</h3>
+<h3>@Model.Description</h3>
+<h3>Release date: @Model.ReleaseDate.ToShortDateString()</h3>
 
 <h5>Actors</h5>
 <table class="table">
@@ -27,7 +28,7 @@
 {
         <tr>
             <td>
-                @Html.ActionLink(item.Actor.Name, "Actor", "Actor", new {actorId = item.Actor.Id})
+                @Html.ActionLink(item.Name, "Actor", "Actor", new {actorId = item.Id})
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AverageRating)

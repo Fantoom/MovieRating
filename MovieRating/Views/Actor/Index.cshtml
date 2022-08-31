@@ -1,8 +1,9 @@
 ﻿@using MovieRating.Data.Models
+@using MovieRating.Data.Models.Dtos
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 
-@model IEnumerable<ActorWithRating>
+@model IEnumerable<ActorWithRatingDto>
 @{int page = (Model as IPagedList)?.PageNumber ?? 0;}
 
 @{
@@ -19,7 +20,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Actor.Name)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 Rating
@@ -34,7 +35,7 @@
 {
         <tr>
             <td>
-                @Html.ActionLink(item.Actor.Name, "Actor", new {actorId = item.Actor.Id})
+                @Html.ActionLink(item.Name, "Actor", new {actorId = item.Id})
             </td>
             <td>
                 @(item.AverageRating?.ToString("0.##") ?? "Rating is not available yet")
@@ -42,7 +43,7 @@
             <td>
                 @if (User.Identity?.IsAuthenticated is true)
                 {
-                        @using (Html.BeginForm("SetActorRating", "Actor", new { actorId = item.Actor.Id, @page }, FormMethod.Post))
+                        @using (Html.BeginForm("SetActorRating", "Actor", new { actorId = item.Id, @page }, FormMethod.Post))
                         {
                             <fieldset>@Html.DropDownList(
                             "rating",
@@ -51,7 +52,7 @@
                                        { 
                                             Text = x.ToString(),
                                             Value = x.ToString(), 
-                                            Selected = x == item.UserRating?.Rating
+                                            Selected = x == item?.UserRating
                                        }))
                             <p>
                                 <input type="submit" value="Submit" />
