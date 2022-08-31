@@ -2,8 +2,8 @@
 {
     public class ActorWithRating
     {
-        public Actor Actor { get; set; } = null!;
+        public ActorDto Actor { get; set; } = null!;
         public double? AverageRating { get; set; }
-        public ActorRating? UserRating;
+        public ActorRatingDto? UserRating;
     }
 }

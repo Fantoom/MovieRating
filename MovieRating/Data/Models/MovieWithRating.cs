@@ -4,8 +4,8 @@ namespace MovieRating.Data.Models
 {
     public class MovieWithRating
     {
-        public Movie Movie { get; set; } = null!;
+        public MovieDto Movie { get; set; } = null!;
         public double? AverageRating { get; set; }
-        public MovieRatingModel? UserRating;
+        public MovieRatingDto? UserRating;
     }
 }
