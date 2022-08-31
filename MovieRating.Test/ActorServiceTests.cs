@@ -85,12 +85,12 @@ namespace MovieRating.Test
                 Title = $"Movie{movieId}",
                 Description = $"MovieDescription{movieId}",
                 ReleaseDate = DateTime.Parse("30.08.2022"),
-                Ratings = Enumerable.Range(1, 5).Select(ratingId => new MovieRatingModel
+                Ratings = Enumerable.Range(1, 5 + movieId).Select(ratingId => new MovieRatingModel
                 {
                     Id = movieId * 1000 + ratingId,
                     MovieId = movieId,
                     Rating = ratingId,
-                    UserId = testUserId
+                    UserId = ratingId == 1 ? testUserId : $"userRating{ratingId}"
                 }).ToList()
             }).ToList();
 
@@ -99,12 +99,12 @@ namespace MovieRating.Test
                 Id = actorId,
                 Name = $"Actor{actorId}",
                 Movies = movies.Take(actorId).ToList(),
-                Ratings = Enumerable.Range(1, 5).Select(ratingId => new ActorRating
+                Ratings = Enumerable.Range(1, 5 + actorId).Select(ratingId => new ActorRating
                 {
                     Id = actorId * 1000 + ratingId,
                     ActorId = actorId,
                     Rating = ratingId,
-                    UserId = testUserId
+                    UserId = ratingId == 1 ? testUserId : $"userRating{ratingId}"
                 }).ToList()
             }).ToList();
 
