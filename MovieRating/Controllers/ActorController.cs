@@ -14,7 +14,7 @@ namespace MovieRating.Controllers
         public ActorController(IActorService actorService)
         {
             _actorService = actorService;
-            _userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            _userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
         public async Task<IActionResult> Index(int? page)
