@@ -51,7 +51,11 @@ namespace MovieRating.Test
             var expectedMovie = generatedMovies.SelectAllMoviesWithRatingsAndActors(userId)
                                            .First(x => x.Id == movieId);
 
-            Assert.Equal(expectedMovie.UserRating, serviceMovie.UserRating);
+            Assert.Equal(serviceMovie.Id, serviceMovie.Id);
+            Assert.Equal(serviceMovie.Title, serviceMovie.Title);
+            Assert.Equal(serviceMovie.Description, serviceMovie.Description);
+            Assert.Equal(serviceMovie.AverageRating, serviceMovie.AverageRating);
+            Assert.Equal(serviceMovie.Actors, serviceMovie.Actors);
         }
 
         [Theory]
@@ -80,12 +84,9 @@ namespace MovieRating.Test
         {
             var actors = Enumerable.Range(1, 10).Select(actorId => new Actor()
             {
-                Id = actorId,
                 Name = $"Actor{actorId}",
                 Ratings = Enumerable.Range(1, 5).Select(ratingId => new ActorRating
                 {
-                    Id = actorId * 1000 + ratingId,
-                    ActorId = actorId,
                     Rating = ratingId,
                     UserId = ratingId == 1 ? testUserId : $"userRating{ratingId}"
                 }).ToList()
@@ -93,15 +94,12 @@ namespace MovieRating.Test
 
             return Enumerable.Range(1, 10).Select(movieId => new Movie()
             {
-                Id = movieId,
                 Title = $"Movie{movieId}",
                 Description = $"MovieDescription{movieId}",
                 ReleaseDate = DateTime.Parse("30.08.2022"),
                 Actors = actors.Take(movieId).ToList(),
                 Ratings = Enumerable.Range(1, 5).Select(ratingId => new MovieRatingModel
                 {
-                    Id = movieId * 1000 + ratingId,
-                    MovieId = movieId,
                     Rating = ratingId,
                     UserId = ratingId == 1 ? testUserId : $"userRating{ratingId}"
                 }).ToList()

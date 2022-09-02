@@ -38,6 +38,7 @@ namespace MovieRating.Test
             var expectedActors = generatedActors.SelectAllActorsWithRatings(userId)
                                             .OrderByDescending(x => x.AverageRating)
                                             .Take(count);
+
             Assert.Equal(expectedActors, serviceActors);
         }
 
@@ -50,7 +51,10 @@ namespace MovieRating.Test
             var expectedActor = generatedActors.SelectAllActorsWithRatingsAndMovies(userId)
                                            .First(x => x.Id == actorId);
 
-            Assert.Equal(expectedActor.UserRating, serviceActor.UserRating);
+            Assert.Equal(expectedActor.Id, serviceActor.Id);
+            Assert.Equal(expectedActor.Name, serviceActor.Name);
+            Assert.Equal(expectedActor.AverageRating, serviceActor.AverageRating);
+            Assert.Equal(expectedActor.Movies, serviceActor.Movies);
         }
 
         [Theory]
@@ -79,14 +83,11 @@ namespace MovieRating.Test
         {
             var movies = Enumerable.Range(1, 10).Select(movieId => new Movie()
             {
-                Id = movieId,
                 Title = $"Movie{movieId}",
                 Description = $"MovieDescription{movieId}",
                 ReleaseDate = DateTime.Parse("30.08.2022"),
                 Ratings = Enumerable.Range(1, 5 + movieId).Select(ratingId => new MovieRatingModel
                 {
-                    Id = movieId * 1000 + ratingId,
-                    MovieId = movieId,
                     Rating = ratingId,
                     UserId = ratingId == 1 ? testUserId : $"userRating{ratingId}"
                 }).ToList()
@@ -94,13 +95,10 @@ namespace MovieRating.Test
 
             var actors = Enumerable.Range(1, 10).Select(actorId => new Actor()
             {
-                Id = actorId,
                 Name = $"Actor{actorId}",
                 Movies = movies.Take(actorId).ToList(),
                 Ratings = Enumerable.Range(1, 5 + actorId).Select(ratingId => new ActorRating
                 {
-                    Id = actorId * 1000 + ratingId,
-                    ActorId = actorId,
                     Rating = ratingId,
                     UserId = ratingId == 1 ? testUserId : $"userRating{ratingId}"
                 }).ToList()
