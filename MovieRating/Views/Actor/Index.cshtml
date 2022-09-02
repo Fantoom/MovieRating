@@ -66,5 +66,12 @@
     </tbody>
 </table>
 
+<style>
+    .pagination li :not(PagedList-skipToPrevious):not(PagedList-skipToNext)
+    {
+           padding-right: 1rem;
+    }
+</style>
+
 @if(Model is IPagedList pagedList)
 @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page }))
