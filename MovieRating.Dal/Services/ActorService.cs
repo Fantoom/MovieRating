@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieRating.Data;
-using MovieRating.Data.Models;
+using MovieRating.Dal.Data;
+using MovieRating.Dal.Data.Models;
 using MovieRating.Data.Models.Dtos;
 using MovieRating.Dto;
 
-namespace MovieRating.Services
+namespace MovieRating.Dal.Services
 {
     public class ActorService : IActorService
     {

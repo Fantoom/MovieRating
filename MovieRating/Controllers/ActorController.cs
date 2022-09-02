@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MovieRating.Services;
+using MovieRating.Dal.Services;
 using System.Security.Claims;
 
 namespace MovieRating.Controllers

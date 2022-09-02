@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieRating.Data.Models
+namespace MovieRating.Dal.Data.Models
 {
     public class ActorRating
     {

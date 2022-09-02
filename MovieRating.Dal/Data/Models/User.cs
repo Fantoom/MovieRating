@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace MovieRating.Data.Models
+namespace MovieRating.Dal.Data.Models
 {
     public class User : IdentityUser
     {

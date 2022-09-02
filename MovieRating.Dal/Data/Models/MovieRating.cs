@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace MovieRating.Data.Models
+namespace MovieRating.Dal.Data.Models
 {
     public class MovieRatingModel
     {

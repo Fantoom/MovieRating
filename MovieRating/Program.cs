@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MovieRating.Data;
-using MovieRating.Services;
+using MovieRating.Dal.Data;
+using MovieRating.Dal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

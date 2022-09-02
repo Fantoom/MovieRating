@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MovieRating.Data;
+using MovieRating.Dal.Data;
 
 #nullable disable
 
 namespace MovieRating.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220825142125_ActorRating")]
-    partial class ActorRating
+    [Migration("20220823154518_RatingUpdates")]
+    partial class RatingUpdates
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,21 +23,6 @@ namespace MovieRating.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.Property<int>("ActorsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ActorsId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("ActorMovie");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -247,50 +232,6 @@ namespace MovieRating.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MovieRating.Data.Models.Actor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Actors");
-                });
-
-            modelBuilder.Entity("MovieRating.Data.Models.ActorRating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActorId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ActorRatings");
-                });
-
             modelBuilder.Entity("MovieRating.Data.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -349,21 +290,6 @@ namespace MovieRating.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.HasOne("MovieRating.Data.Models.Actor", null)
-                        .WithMany()
-                        .HasForeignKey("ActorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieRating.Data.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -415,25 +341,6 @@ namespace MovieRating.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MovieRating.Data.Models.ActorRating", b =>
-                {
-                    b.HasOne("MovieRating.Data.Models.Actor", "Actor")
-                        .WithMany("Ratings")
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieRating.Data.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MovieRating.Data.Models.MovieRatingModel", b =>
                 {
                     b.HasOne("MovieRating.Data.Models.Movie", "Movie")
@@ -451,11 +358,6 @@ namespace MovieRating.Migrations
                     b.Navigation("Movie");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MovieRating.Data.Models.Actor", b =>
-                {
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("MovieRating.Data.Models.Movie", b =>

@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MovieRating.Data;
+using MovieRating.Dal.Data;
 
 #nullable disable
 
 namespace MovieRating.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220821112033_Initial")]
-    partial class Initial
+    [Migration("20220821112459_Rating")]
+    partial class Rating
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -248,6 +248,25 @@ namespace MovieRating.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("MovieRating.Models.RatingModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

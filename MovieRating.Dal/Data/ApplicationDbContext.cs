@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MovieRating.Data.Models;
+using MovieRating.Dal.Data.Models;
 
-namespace MovieRating.Data
+namespace MovieRating.Dal.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

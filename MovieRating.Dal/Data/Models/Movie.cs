@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
-namespace MovieRating.Data.Models
+namespace MovieRating.Dal.Data.Models
 {
     public class Movie
     {
