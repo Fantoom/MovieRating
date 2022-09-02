@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MovieRating.Dto
+﻿namespace MovieRating.Dto
 {
     public record MovieWithRatingDto : MovieDto
     {

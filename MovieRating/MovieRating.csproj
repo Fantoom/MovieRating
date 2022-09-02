@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MovieRating.Dal\MovieRating.Dal.csproj" />
-    <ProjectReference Include="..\MovieRating.Dto\MovieRating.Dto.csproj" />
     
     <InternalsVisibleTo Include="MovieRating.Test" /> 
   </ItemGroup>
