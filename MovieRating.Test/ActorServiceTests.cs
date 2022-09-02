@@ -1,11 +1,8 @@
-using MovieRating.Data;
-using MovieRating.Data.Models;
-using MovieRating.Services;
+using MovieRating.Dal.Data;
+using MovieRating.Dal.Services;
 using X.PagedList;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using MovieRating.Data.Models.Dtos;
 using MovieRating.Dto;
+using MovieRating.Dal.Data.Models;
 
 namespace MovieRating.Test
 {
