@@ -21,7 +21,7 @@ namespace MovieRating.Dal.Services
 
         public async Task AddRatingAsync(string userId, int movieId, int rating)
         {
-            var ratingModel = await GetUserMovieRatingAsync(userId, movieId);
+            var ratingModel = await InternalGetUserMovieRatingAsync(userId, movieId);
             if (ratingModel is not null)
             {
                 ratingModel.Rating = rating;
@@ -42,11 +42,19 @@ namespace MovieRating.Dal.Services
                 .ToListAsync();
         }
 
-        public async Task<MovieRatingModel?> GetUserMovieRatingAsync(string userId, int movieId)
+        public async Task<MovieRatingDto?> GetUserMovieRatingAsync(string userId, int movieId)
         {
-            return await _dbContext
-                .MovieRatings
-                .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
+            var rating = await InternalGetUserMovieRatingAsync(userId, movieId);
+
+            if (rating is null)
+                return null;
+
+            return new MovieRatingDto()
+            {
+                MovieId = rating.MovieId,
+                Rating = rating.Rating,
+                UserId = rating.UserId
+            };
         }
 
         public async Task<MovieWithRatingAndActorsDto> GetMovieWithRatingAndActorsAsync(int movieId, string? userId = null)
@@ -54,7 +62,14 @@ namespace MovieRating.Dal.Services
             return await SelectAllMoviesWithRatingsAndActors(userId).FirstAsync(x => x.Id == movieId);
         }
 
-        private IQueryable<MovieWithRatingDto> SelectAllMoviesWithRatings(string? userId = null, IQueryable<Movie>? movies = null)
+        private async Task<MovieRatingModel?> InternalGetUserMovieRatingAsync(string userId, int movieId)
+        {
+            return await _dbContext
+                .MovieRatings
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
+        }
+
+            private IQueryable<MovieWithRatingDto> SelectAllMoviesWithRatings(string? userId = null, IQueryable<Movie>? movies = null)
         {
             return (movies ?? _dbContext.Movies)
                 .Select(x => new MovieWithRatingDto()

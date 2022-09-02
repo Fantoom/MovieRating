@@ -10,6 +10,6 @@ namespace MovieRating.Dal.Services
         Task<ActorWithRatingAndMoviesDto> GetActorWithRatingAndMoviesAsync(int actorId, string? userId = null);
         Task<AsyncPagedList<ActorWithRatingDto>> GetPagedActorsWithRatingsAsync(int pageNumber, int pageSize, string? userId);
         Task<List<ActorWithRatingDto>> GetTopActorsAsync(int count, string? userId);
-        Task<ActorRating?> GetUserActorRatingAsync(string userId, int actorId);
+        Task<ActorRatingDto?> GetUserActorRatingAsync(string userId, int actorId);
     }
 }

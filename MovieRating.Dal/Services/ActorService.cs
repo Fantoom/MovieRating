@@ -26,11 +26,19 @@ namespace MovieRating.Dal.Services
                 .Take(count).ToListAsync();
         }
 
-        public async Task<ActorRating?> GetUserActorRatingAsync(string userId, int actorId)
+        public async Task<ActorRatingDto?> GetUserActorRatingAsync(string userId, int actorId)
         {
-            return await _dbContext
-                .ActorRatings
-                .FirstOrDefaultAsync(x => x.UserId == userId && x.ActorId == actorId);
+            var rating = await InternalGetUserActorRatingAsync(userId, actorId);
+
+            if (rating is null)
+                return null;
+
+            return new ActorRatingDto()
+            {
+                ActorId = rating.ActorId,
+                Rating = rating.Rating,
+                UserId = rating.UserId
+            };
         }
 
         public async Task<ActorWithRatingAndMoviesDto> GetActorWithRatingAndMoviesAsync(int actorId, string? userId = null)
@@ -41,7 +49,7 @@ namespace MovieRating.Dal.Services
 
         public async Task AddRatingAsync(string userId, int actorId, int rating)
         {
-            var ratingModel = await GetUserActorRatingAsync(userId, actorId);
+            var ratingModel = await InternalGetUserActorRatingAsync(userId, actorId);
             if (ratingModel is not null)
             {
                 ratingModel.Rating = rating;
@@ -53,6 +61,14 @@ namespace MovieRating.Dal.Services
             _dbContext.ActorRatings.Update(ratingModel);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<ActorRating?> InternalGetUserActorRatingAsync(string userId, int actorId)
+        {
+            return await _dbContext
+                .ActorRatings
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.ActorId == actorId);
+        }
+
 
         private IQueryable<ActorWithRatingDto> SelectAllActorsWithRatings(string? userId = null, IQueryable<Actor>? actors = null)
         {
