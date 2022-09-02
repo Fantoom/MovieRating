@@ -1,0 +1,32 @@
+﻿[
+  {
+    UserRating: 1,
+    AverageRating: 8.0,
+    Id: 10,
+    Name: Actor10
+  },
+  {
+    UserRating: 1,
+    AverageRating: 7.5,
+    Id: 9,
+    Name: Actor9
+  },
+  {
+    UserRating: 1,
+    AverageRating: 7.0,
+    Id: 8,
+    Name: Actor8
+  },
+  {
+    UserRating: 1,
+    AverageRating: 6.5,
+    Id: 7,
+    Name: Actor7
+  },
+  {
+    UserRating: 1,
+    AverageRating: 6.0,
+    Id: 6,
+    Name: Actor6
+  }
+]

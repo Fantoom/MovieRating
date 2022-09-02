@@ -1,0 +1,5 @@
+﻿{
+  UserId: TestUserId,
+  ActorId: 1,
+  Rating: 1
+}

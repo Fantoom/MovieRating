@@ -1,0 +1,15 @@
+﻿{
+  Actors: [
+    {
+      UserRating: 0,
+      AverageRating: 3.0,
+      Id: 1,
+      Name: Actor1
+    }
+  ],
+  AverageRating: 3.0,
+  Id: 1,
+  Title: Movie1,
+  Description: MovieDescription1,
+  ReleaseDate: DateTime_1
+}

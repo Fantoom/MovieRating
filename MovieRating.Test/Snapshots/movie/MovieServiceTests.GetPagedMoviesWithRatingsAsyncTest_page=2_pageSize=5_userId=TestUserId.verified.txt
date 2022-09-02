@@ -1,0 +1,42 @@
+﻿[
+  {
+    AverageRating: 3.0,
+    UserRating: 1,
+    Id: 6,
+    Title: Movie6,
+    Description: MovieDescription6,
+    ReleaseDate: DateTime_1
+  },
+  {
+    AverageRating: 3.0,
+    UserRating: 1,
+    Id: 7,
+    Title: Movie7,
+    Description: MovieDescription7,
+    ReleaseDate: DateTime_1
+  },
+  {
+    AverageRating: 3.0,
+    UserRating: 1,
+    Id: 8,
+    Title: Movie8,
+    Description: MovieDescription8,
+    ReleaseDate: DateTime_1
+  },
+  {
+    AverageRating: 3.0,
+    UserRating: 1,
+    Id: 9,
+    Title: Movie9,
+    Description: MovieDescription9,
+    ReleaseDate: DateTime_1
+  },
+  {
+    AverageRating: 3.0,
+    UserRating: 1,
+    Id: 10,
+    Title: Movie10,
+    Description: MovieDescription10,
+    ReleaseDate: DateTime_1
+  }
+]

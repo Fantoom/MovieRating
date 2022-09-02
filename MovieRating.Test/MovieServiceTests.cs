@@ -6,12 +6,14 @@ using MovieRating.Dal.Services;
 
 namespace MovieRating.Test
 {
+    [UsesVerify]
     public class MovieServiceTests : IDisposable
     {
 
         private ApplicationDbContext context;
         private MovieService movieService;
         private List<Movie> generatedMovies;
+        private VerifySettings settings;
         private static readonly string testUserId = "TestUserId";
 
         public MovieServiceTests()
@@ -27,6 +29,7 @@ namespace MovieRating.Test
             context.Movies.AddRange(generatedMovies);
             context.SaveChanges();
             movieService = new MovieService(context);
+            settings = GlobalSetups.GetMovieVerifySettings();
         }
 
         [Theory]
@@ -36,10 +39,7 @@ namespace MovieRating.Test
         public async Task GetTopMoviesAsyncTest(int count, string? userId = null)
         {
             var serviceMovies = await movieService.GetTopMoviesAsync(count, userId) as IEnumerable<MovieWithRatingDto>;
-            var expectedMovies = generatedMovies.SelectAllMoviesWithRatings(userId)
-                                            .OrderByDescending(x => x.AverageRating)
-                                            .Take(count);
-            Assert.Equal(expectedMovies, serviceMovies);
+            await Verify(serviceMovies, settings).UseParameters(count, userId);
         }
 
         [Theory]
@@ -48,14 +48,7 @@ namespace MovieRating.Test
         public async Task GetMovieWithRatingAndActorsAsyncTest(int movieId, string? userId = null)
         {
             var serviceMovie = await movieService.GetMovieWithRatingAndActorsAsync(movieId, userId);
-            var expectedMovie = generatedMovies.SelectAllMoviesWithRatingsAndActors(userId)
-                                           .First(x => x.Id == movieId);
-
-            Assert.Equal(serviceMovie.Id, serviceMovie.Id);
-            Assert.Equal(serviceMovie.Title, serviceMovie.Title);
-            Assert.Equal(serviceMovie.Description, serviceMovie.Description);
-            Assert.Equal(serviceMovie.AverageRating, serviceMovie.AverageRating);
-            Assert.Equal(serviceMovie.Actors, serviceMovie.Actors);
+            await Verify(serviceMovie, settings).UseParameters(movieId, userId);
         }
 
         [Theory]
@@ -63,10 +56,7 @@ namespace MovieRating.Test
         public async Task GetUserMovieRatingAsyncTest(string userId, int movieId)
         {
             var serviceMovieRating = await movieService.GetUserMovieRatingAsync(userId, movieId);
-            var expectedRating = generatedMovies.First(x => x.Id == movieId).Ratings
-                                            .First(x => x.UserId == userId);
-
-            Assert.Equal(expectedRating, serviceMovieRating);
+            await Verify(serviceMovieRating, settings).UseParameters(userId, movieId);
         }
 
         [Theory]
@@ -75,9 +65,7 @@ namespace MovieRating.Test
         public async Task GetPagedMoviesWithRatingsAsyncTest(int page, int pageSize, string userId)
         {
             var serviceMovies = await movieService.GetPagedMoviesWithRatingsAsync(page, pageSize, userId) as IEnumerable<MovieWithRatingDto>;
-            var expectedMovies = generatedMovies.SelectAllMoviesWithRatings(userId).ToPagedList(page, pageSize) as IEnumerable<MovieWithRatingDto>;
-
-            Assert.Equal(expectedMovies, serviceMovies);
+            await Verify(serviceMovies, settings).UseParameters(page, pageSize, userId);
         }
 
         private static List<Movie> GetTestData()
