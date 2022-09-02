@@ -2,6 +2,7 @@
 using MovieRating.Data;
 using MovieRating.Data.Models;
 using MovieRating.Data.Models.Dtos;
+using MovieRating.Dto;
 
 namespace MovieRating.Services
 {

@@ -1,7 +1,8 @@
-﻿@using MovieRating.Data.Models
-@using X.PagedList.Mvc.Core;
-@using X.PagedList;
-@using MovieRating.Data.Models.Dtos;
+﻿@    using MovieRating.Data.Models
+@    using X.PagedList.Mvc.Core;
+@    using X.PagedList;
+@    using MovieRating.Data.Models.Dtos;
+    using MovieRating.Dto;
 
 @model IEnumerable<MovieWithRatingDto>
 @{int page = (Model as IPagedList)?.PageNumber ?? 0;}

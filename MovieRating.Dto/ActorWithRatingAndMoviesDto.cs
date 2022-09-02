@@ -1,4 +1,4 @@
-﻿namespace MovieRating.Data.Models.Dtos
+﻿namespace MovieRating.Dto
 {
     public record ActorWithRatingAndMoviesDto : ActorWithRatingDto
     {

@@ -5,6 +5,7 @@ using X.PagedList;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MovieRating.Data.Models.Dtos;
+using MovieRating.Dto;
 
 namespace MovieRating.Test
 {

@@ -1,4 +1,6 @@
-﻿namespace MovieRating.Data.Models.Dtos
+﻿using MovieRating.Data.Models;
+
+namespace MovieRating.Dto
 {
     public record ActorRatingDto()
     {
