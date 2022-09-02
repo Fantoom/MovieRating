@@ -12,3 +12,12 @@ Install MS SqlServer Express and change connection string in appsettings.json
 `dotnet run --project MovieRating`
 
 You can use `--initfake` argument to add fake data into the db for testing purposes
+
+### Tests
+Tests are based on snapshot or golden testing technique
+  
+Run the tests using this shell command:
+
+```console
+$ dotnet test
+```
