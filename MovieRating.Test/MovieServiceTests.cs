@@ -100,39 +100,4 @@ namespace MovieRating.Test
         }
 
     }
-
-    internal static class MovieTestExt
-    {
-        internal static IEnumerable<MovieWithRatingDto> SelectAllMoviesWithRatings(this IEnumerable<Movie> movies, string? userId = null)
-        {
-            return movies.Select(x => new MovieWithRatingDto()
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Description = x.Description,
-                ReleaseDate = x.ReleaseDate,
-                AverageRating = x.Ratings.Average(r => r.Rating),
-                UserRating = x.Ratings.FirstOrDefault(r => r.UserId == userId)?.Rating ?? null
-            });
-        }
-        internal static IEnumerable<MovieWithRatingDto> SelectAllMoviesWithRatingsAndActors(this IEnumerable<Movie> movies, string? userId = null)
-        {
-            return movies.Select(x => new MovieWithRatingAndActorsDto()
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Description = x.Description,
-                ReleaseDate = x.ReleaseDate,
-                AverageRating = x.Ratings.Average(r => r.Rating),
-                UserRating = x.Ratings.FirstOrDefault(r => r.UserId == userId)?.Rating,
-                Actors = x.Actors.Select(a => new ActorWithRatingDto()
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    AverageRating = a.Ratings.Average(r => r.Rating),
-                    UserRating = a.Ratings.FirstOrDefault(r => r.UserId == userId)?.Rating
-                }).ToList()
-            });
-        }
-    }
 }
