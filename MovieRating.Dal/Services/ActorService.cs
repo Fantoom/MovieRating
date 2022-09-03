@@ -13,7 +13,10 @@ namespace MovieRating.Dal.Services
             _dbContext = dbContext;
         }
 
-        public async Task<AsyncPagedList<ActorWithRatingDto>> GetPagedActorsWithRatingsAsync(int pageNumber, int pageSize, string? userId)
+        public async Task<AsyncPagedList<ActorWithRatingDto>> GetPagedActorsWithRatingsAsync(
+            int pageNumber, 
+            int pageSize, 
+            string? userId)
         {
             return await _dbContext.Actors.SelectAllActorsWithRatings(userId)
                 .ToAsyncPagedList(pageNumber, pageSize);
@@ -41,7 +44,9 @@ namespace MovieRating.Dal.Services
             };
         }
 
-        public async Task<ActorWithRatingAndMoviesDto> GetActorWithRatingAndMoviesAsync(int actorId, string? userId = null)
+        public async Task<ActorWithRatingAndMoviesDto> GetActorWithRatingAndMoviesAsync(
+            int actorId, 
+            string? userId = null)
         {
             return await _dbContext.Actors.SelectAllActorsWithRatingsAndMovies(userId)
                 .FirstAsync(x => x.Id == actorId);
@@ -56,7 +61,12 @@ namespace MovieRating.Dal.Services
             }
             else
             {
-                ratingModel = new() { ActorId = actorId, Rating = rating, UserId = userId };
+                ratingModel = new() 
+                { 
+                    ActorId = actorId, 
+                    Rating = rating, 
+                    UserId = userId 
+                };
             }
             _dbContext.ActorRatings.Update(ratingModel);
             await _dbContext.SaveChangesAsync();

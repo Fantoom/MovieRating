@@ -13,7 +13,10 @@ namespace MovieRating.Dal.Services
             _dbContext = dbContext;
         }
 
-        public async Task<AsyncPagedList<MovieWithRatingDto>> GetPagedMoviesWithRatingsAsync(int pageNumber, int pageSize, string? userId = null)
+        public async Task<AsyncPagedList<MovieWithRatingDto>> GetPagedMoviesWithRatingsAsync(
+            int pageNumber, 
+            int pageSize, 
+            string? userId = null)
         {
             return await _dbContext.Movies.SelectAllMoviesWithRatings(userId)
                          .ToAsyncPagedList(pageNumber, pageSize);
@@ -28,13 +31,20 @@ namespace MovieRating.Dal.Services
             }
             else
             {
-                ratingModel = new() { MovieId = movieId, Rating = rating, UserId = userId };
+                ratingModel = new() 
+                { 
+                    MovieId = movieId, 
+                    Rating = rating, 
+                    UserId = userId 
+                };
             }
             _dbContext.MovieRatings.Update(ratingModel);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<MovieWithRatingDto>> GetTopMoviesAsync(int count, string? userId = null)
+        public async Task<List<MovieWithRatingDto>> GetTopMoviesAsync(
+            int count, 
+            string? userId = null)
         {
             return await _dbContext.Movies.SelectAllMoviesWithRatings(userId)
                 .OrderByDescending(x => x.AverageRating)
@@ -57,12 +67,18 @@ namespace MovieRating.Dal.Services
             };
         }
 
-        public async Task<MovieWithRatingAndActorsDto> GetMovieWithRatingAndActorsAsync(int movieId, string? userId = null)
+        public async Task<MovieWithRatingAndActorsDto> GetMovieWithRatingAndActorsAsync(
+            int movieId, 
+            string? userId = null)
         {
-            return await _dbContext.Movies.SelectAllMoviesWithRatingsAndActors(userId).FirstAsync(x => x.Id == movieId);
+            return await _dbContext.Movies.
+                SelectAllMoviesWithRatingsAndActors(userId)
+                .FirstAsync(x => x.Id == movieId);
         }
 
-        private async Task<MovieRatingModel?> InternalGetUserMovieRatingAsync(string userId, int movieId)
+        private async Task<MovieRatingModel?> InternalGetUserMovieRatingAsync(
+            string userId, 
+            int movieId)
         {
             return await _dbContext
                 .MovieRatings
