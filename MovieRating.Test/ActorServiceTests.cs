@@ -38,7 +38,7 @@ namespace MovieRating.Test
 
         public async Task GetTopActorsAsyncTest(int count, string? userId = null)
         {
-            var serviceActors = await actorService.GetTopActorsAsync(count, userId) as IEnumerable<ActorWithRatingDto>;
+            var serviceActors = await actorService.GetTopActorsAsync(count, userId);
             await Verify(serviceActors, settings).UseParameters(count, userId);
         }
 
@@ -64,7 +64,7 @@ namespace MovieRating.Test
         [InlineData(2, 5, "TestUserId")]
         public async Task GetPagedActorsWithRatingsAsyncTest(int page, int pageSize, string userId)
         {
-            var serviceActors = await actorService.GetPagedActorsWithRatingsAsync(page, pageSize, userId) as IEnumerable<ActorRatingDto>;
+            var serviceActors = await actorService.GetPagedActorsWithRatingsAsync(page, pageSize, userId);
             await Verify(serviceActors, settings).UseParameters(page, pageSize, userId);
         }
 

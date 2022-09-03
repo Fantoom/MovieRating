@@ -38,7 +38,7 @@ namespace MovieRating.Test
 
         public async Task GetTopMoviesAsyncTest(int count, string? userId = null)
         {
-            var serviceMovies = await movieService.GetTopMoviesAsync(count, userId) as IEnumerable<MovieWithRatingDto>;
+            var serviceMovies = await movieService.GetTopMoviesAsync(count, userId);
             await Verify(serviceMovies, settings).UseParameters(count, userId);
         }
 
@@ -64,7 +64,7 @@ namespace MovieRating.Test
         [InlineData(2, 5, "TestUserId")]
         public async Task GetPagedMoviesWithRatingsAsyncTest(int page, int pageSize, string userId)
         {
-            var serviceMovies = await movieService.GetPagedMoviesWithRatingsAsync(page, pageSize, userId) as IEnumerable<MovieWithRatingDto>;
+            var serviceMovies = await movieService.GetPagedMoviesWithRatingsAsync(page, pageSize, userId);
             await Verify(serviceMovies, settings).UseParameters(page, pageSize, userId);
         }
 
