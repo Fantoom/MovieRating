@@ -24,13 +24,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    if (args.Any(x => x.ToLower() == "--initfake"))
+    if (args.Any(arg => arg.Equals("--initfake", StringComparison.OrdinalIgnoreCase)))
     {
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<ApplicationDbContext>();
-            await MovieRating.InitialData.InsertFakeData(context);
+            await MovieRating.InitialData.InsertFakeDataAsync(context);
         }
     }
 }
