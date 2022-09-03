@@ -5,18 +5,13 @@ namespace MovieRating.Dal.Data
 {
     public class AsyncPagedList<T> : BasePagedList<T>
     {
-        private AsyncPagedList()
-        {
-
-        }
-
         public static async Task<AsyncPagedList<T>> CreateAsync(IQueryable<T> superset, int pageNumber, int pageSize)
         {
             var pagedList = new AsyncPagedList<T>();
             if (pageNumber < 1)
-                throw new ArgumentOutOfRangeException("pageNumber", pageNumber, "PageNumber cannot be below 1.");
+                throw new ArgumentOutOfRangeException(nameof(pageNumber), pageNumber, "PageNumber cannot be below 1.");
             if (pageSize < 1)
-                throw new ArgumentOutOfRangeException("pageSize", pageSize, "PageSize cannot be less than 1.");
+                throw new ArgumentOutOfRangeException(nameof(pageSize), pageSize, "PageSize cannot be less than 1.");
 
             // set source to blank list if superset is null to prevent exceptions
             pagedList.TotalItemCount = superset == null ? 0 : await superset.CountAsync();
