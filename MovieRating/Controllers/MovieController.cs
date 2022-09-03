@@ -8,7 +8,7 @@ namespace MovieRating.Controllers
     public class MovieController : Controller
     {
         private readonly IMovieService _movieService;
-        private string? _userId;
+        private readonly string? _userId;
 
         public MovieController(IMovieService movieService)
         {
@@ -18,12 +18,14 @@ namespace MovieRating.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             int pageNumber = page ?? 1;
-            return View("Index", await _movieService.GetPagedMoviesWithRatingsAsync(pageNumber, 10, _userId));
+            var result = await _movieService.GetPagedMoviesWithRatingsAsync(pageNumber, 10, _userId);
+            return View("Index", result);
         }
 
         public async Task<IActionResult> TopMovies()
         {
-            return View("Index", await _movieService.GetTopMoviesAsync(5, _userId));
+            var result = await _movieService.GetTopMoviesAsync(5, _userId);
+            return View("Index", result);
         }
 
         public async Task<IActionResult> Movie(int movieId)
@@ -36,7 +38,6 @@ namespace MovieRating.Controllers
         public async Task<IActionResult> SetMovieRating(int rating, int movieId, int? page = 1)
         {
             await _movieService.AddRatingAsync(_userId!, movieId, rating);
-
             return await Index(page);
         }
     }

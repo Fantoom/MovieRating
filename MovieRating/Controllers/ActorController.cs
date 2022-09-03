@@ -8,7 +8,7 @@ namespace MovieRating.Controllers
     public class ActorController : Controller
     {
         private readonly IActorService _actorService;
-        private string? _userId;
+        private readonly string? _userId;
 
         public ActorController(IActorService actorService)
         {
@@ -19,12 +19,14 @@ namespace MovieRating.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             int pageNumber = page ?? 1;
-            return View("Index", await _actorService.GetPagedActorsWithRatingsAsync(pageNumber, 10, _userId));
+            var result = await _actorService.GetPagedActorsWithRatingsAsync(pageNumber, 10, _userId);
+            return View("Index", result);
         }
 
         public async Task<IActionResult> TopActors()
         {
-            return View("Index", await _actorService.GetTopActorsAsync(5, _userId));
+            var result = await _actorService.GetTopActorsAsync(5, _userId);
+            return View("Index", result);
         }
 
         public async Task<IActionResult> Actor(int actorId)
@@ -37,7 +39,6 @@ namespace MovieRating.Controllers
         public async Task<IActionResult> SetActorRating(int rating, int actorId, int? page = 1)
         {
             await _actorService.AddRatingAsync(_userId!, actorId, rating);
-
             return await Index(page);
         }
 
