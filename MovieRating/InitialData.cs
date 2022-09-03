@@ -5,9 +5,8 @@ namespace MovieRating
 {
     public class InitialData
     {
-
         // This method is added and used only for development and testing
-        public static async Task InsertFakeData(ApplicationDbContext dbContext)
+        public static async Task InsertFakeDataAsync(ApplicationDbContext dbContext)
         {
             var actors = Enumerable.Range(1, 10).Select(actorId => new Actor()
             {
