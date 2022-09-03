@@ -9,14 +9,14 @@ namespace MovieRating.Dal.Services
             this IQueryable<Movie> movies,
             string? userId = null)
         {
-            return movies.Select(x => new MovieWithRatingDto()
+            return movies.Select(movie => new MovieWithRatingDto()
             {
-                Id = x.Id,
-                Title = x.Title,
-                Description = x.Description,
-                ReleaseDate = x.ReleaseDate,
-                AverageRating = x.Ratings.Average(r => r.Rating),
-                UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating as int?).FirstOrDefault()
+                Id = movie.Id,
+                Title = movie.Title,
+                Description = movie.Description,
+                ReleaseDate = movie.ReleaseDate,
+                AverageRating = movie.Ratings.Average(r => r.Rating),
+                UserRating = movie.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating as int?).FirstOrDefault()
             });
         }
 
@@ -24,15 +24,15 @@ namespace MovieRating.Dal.Services
             this IQueryable<Movie> movies, 
             string? userId = null)
         {
-            return movies.Select(x => new MovieWithRatingAndActorsDto()
+            return movies.Select(movie => new MovieWithRatingAndActorsDto()
             {
-                Id = x.Id,
-                Title = x.Title,
-                Description = x.Description,
-                ReleaseDate = x.ReleaseDate,
-                AverageRating = x.Ratings.Average(r => r.Rating),
-                UserRating = x.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating as int?).FirstOrDefault(),
-                Actors = x.Actors.Select(a => new ActorWithRatingDto()
+                Id = movie.Id,
+                Title = movie.Title,
+                Description = movie.Description,
+                ReleaseDate = movie.ReleaseDate,
+                AverageRating = movie.Ratings.Average(r => r.Rating),
+                UserRating = movie.Ratings.Where(r => r.UserId == userId).Select(r => r.Rating as int?).FirstOrDefault(),
+                Actors = movie.Actors.Select(a => new ActorWithRatingDto()
                 {
                     Id = a.Id,
                     Name = a.Name,
