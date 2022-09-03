@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 
 namespace MovieRating.Dal.Data.Models
 {

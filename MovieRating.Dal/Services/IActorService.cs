@@ -1,5 +1,4 @@
 ﻿using MovieRating.Dal.Data;
-using MovieRating.Dal.Data.Models;
 using MovieRating.Dto;
 
 namespace MovieRating.Dal.Services

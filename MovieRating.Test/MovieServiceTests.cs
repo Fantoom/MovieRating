@@ -1,8 +1,8 @@
-using X.PagedList;
-using MovieRating.Dto;
 using MovieRating.Dal.Data;
 using MovieRating.Dal.Data.Models;
 using MovieRating.Dal.Services;
+using MovieRating.Dto;
+using X.PagedList;
 
 namespace MovieRating.Test
 {

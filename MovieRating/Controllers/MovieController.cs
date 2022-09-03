@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using MovieRating.Dal.Services;
-using MovieRating.Dto;
-using MovieRating.Dal.Data;
 using System.Security.Claims;
 
 namespace MovieRating.Controllers
