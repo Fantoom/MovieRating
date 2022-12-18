@@ -75,7 +75,7 @@ namespace MovieRating.Test
             {
                 Title = $"Movie{movieId}",
                 Description = $"MovieDescription{movieId}",
-                ReleaseDate = DateTime.Parse("30.08.2022"),
+                ReleaseDate = DateTime.ParseExact("30.08.2022", "dd.MM.yyyy", null),
                 Ratings = Enumerable.Range(1, 5 + movieId).Select(ratingId => new MovieRatingModel
                 {
                     Rating = ratingId,
