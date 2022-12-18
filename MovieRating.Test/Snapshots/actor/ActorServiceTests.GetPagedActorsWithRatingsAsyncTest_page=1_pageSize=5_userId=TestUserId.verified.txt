@@ -1,1 +1,32 @@
-﻿null
+﻿[
+  {
+    UserRating: 1,
+    AverageRating: 3.5,
+    Id: 1,
+    Name: Actor1
+  },
+  {
+    UserRating: 1,
+    AverageRating: 4.0,
+    Id: 2,
+    Name: Actor2
+  },
+  {
+    UserRating: 1,
+    AverageRating: 4.5,
+    Id: 3,
+    Name: Actor3
+  },
+  {
+    UserRating: 1,
+    AverageRating: 5.0,
+    Id: 4,
+    Name: Actor4
+  },
+  {
+    UserRating: 1,
+    AverageRating: 5.5,
+    Id: 5,
+    Name: Actor5
+  }
+]
