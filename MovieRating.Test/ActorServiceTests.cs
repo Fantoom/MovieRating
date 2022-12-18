@@ -6,6 +6,7 @@ using X.PagedList;
 
 namespace MovieRating.Test
 {
+    [UseInvariantCulture]
     [UsesVerify]
     public class ActorServiceTests : IDisposable
     {
